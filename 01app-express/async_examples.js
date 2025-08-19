@@ -8,7 +8,11 @@ function wait(ms) {
       // 指定時間が経過したら、Promiseを成功状態にする
       resolve(`- ${ms}ms 経過しました`);
     }, ms);
-  });
+  }).then(result => {
+    console.log(result);
+  }).catch(error => {
+    console.error(`エラーが発生しました: ${error}`);
+  })
 }
 
 
@@ -19,10 +23,12 @@ async function main() {
 
   // `await` キーワードは、Promiseが解決される（処理が終わる）まで、ここで待機します。
   // `await` は `async` 関数の中でのみ使用できます。
-  const result1 = await wait(1000); // 1000ms = 1秒 待つ
+  // const result1 = await wait(1000); // 1000ms = 1秒 待つ
+  const result1 = wait(1000); // 1000ms = 1秒 待つ
   console.log(result1);
 
-  const result2 = await wait(2000); // さらに 2秒 待つ
+  // const result2 = await wait(2000); // さらに 2秒 待つ
+  const result2 = wait(2000); // さらに 2秒 待つ
   console.log(result2);
 
   console.log("すべての処理が完了しました。");
