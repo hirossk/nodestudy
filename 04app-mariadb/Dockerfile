@@ -1,0 +1,6 @@
+FROM mariadb:latest
+
+ENV MARIADB_ROOT_PASSWORD=password
+ENV MARIADB_DATABASE=todo_app_db
+ENV MARIADB_USER=appuser
+ENV MARIADB_PASSWORD=apppassword

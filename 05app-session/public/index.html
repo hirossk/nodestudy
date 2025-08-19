@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>セッション共有チャット</title>
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; }
+    #login-container, #chat-container { padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+    #chat-container { display: none; } /* 初期状態では非表示 */
+    #chat-box { height: 400px; overflow-y: scroll; padding: 10px; margin-bottom: 10px; background: #f9f9f9; }
+    .chat-message { margin-bottom: 8px; }
+    .chat-message .username { font-weight: bold; }
+    .info-message { color: #888; font-style: italic; text-align: center; }
+    form { display: flex; }
+    input { flex-grow: 1; padding: 8px; }
+    button { padding: 8px 15px; }
+  </style>
+</head>
+<body>
+  <h1>リアルタイムチャット (セッション共有)</h1>
+
+  <!-- ログインエリア -->
+  <div id="login-container">
+    <h2>ログイン</h2>
+    <form id="login-form">
+      <input type="text" id="username-input" placeholder="ユーザー名を入力" required>
+      <button type="submit">参加する</button>
+    </form>
+  </div>
+
+  <!-- チャットエリア -->
+  <div id="chat-container">
+    <h2 id="welcome-message"></h2>
+    <div id="chat-box"></div>
+    <form id="message-form">
+      <input type="text" id="message-input" placeholder="メッセージを入力..." autocomplete="off" required>
+      <button type="submit">送信</button>
+    </form>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>

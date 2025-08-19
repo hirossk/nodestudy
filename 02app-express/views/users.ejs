@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <h1><%= title %></h1>
+  <p>このページは views/users.ejs から動的に生成されています。</p>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>名前</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%# EJSのループ構文を使って、users配列の各要素をテーブルの行として出力 %>
+      <% users.forEach(user => { %>
+        <tr>
+          <td><a href="/users/<%= user.id %>"><%= user.id %></a></td>
+          <td><%= user.name %></td>
+          <td><%= user.email %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+  <br>
+  <a href="/">トップページに戻る</a>
+</body>
+</html>
