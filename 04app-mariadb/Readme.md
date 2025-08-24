@@ -16,3 +16,8 @@ docker run -d \
   --name mariadb-todo \
   -p 3306:3306 \
   my-mariadb
+
+-- mysql clientのインストール
+sudo apt install mariadb-client-core 
+-- ログインする
+mysql -u root -p -h localhost -P 3306
