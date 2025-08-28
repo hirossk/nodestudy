@@ -1,78 +1,62 @@
-const loginContainer = document.getElementById('login-container');
-const chatContainer = document.getElementById('chat-container');
-const loginForm = document.getElementById('login-form');
-const usernameInput = document.getElementById('username-input');
-const welcomeMessage = document.getElementById('welcome-message');
 const chatBox = document.getElementById('chat-box');
 const messageForm = document.getElementById('message-form');
 const messageInput = document.getElementById('message-input');
 
-let ws;
+// WebSocketサーバーに接続
+const ws = new WebSocket(`ws://${window.location.host}`);
 
-// ログインフォームの処理
-loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const username = usernameInput.value.trim();
-  if (!username) return;
-
-  const response = await fetch('/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username }),
-  });
-
-  const data = await response.json();
-  if (data.success) {
-    enterChat(data.username);
-  }
+// 接続が開いたときのイベント
+ws.addEventListener('open', () => {
+  addSystemMessage('サーバーに接続しました。');
 });
 
-// チャット画面に入室し、WebSocket接続を開始する関数
-function enterChat(username) {
-  loginContainer.style.display = 'none';
-  chatContainer.style.display = 'block';
-  welcomeMessage.textContent = `ようこそ、${username}さん`;
+// サーバーからメッセージを受信したときのイベント
+ws.addEventListener('message', (event) => {
+  addChatMessage(event.data);
+});
 
-  // WebSocket接続を開始
-  ws = new WebSocket(`ws://${window.location.host}`);
+// 接続が閉じたときのイベント
+ws.addEventListener('close', () => {
+  addSystemMessage('サーバーとの接続が切れました。');
+});
 
-  ws.addEventListener('open', () => console.log('WebSocket接続が確立しました。'));
-  ws.addEventListener('close', () => addMessageToBox({ type: 'info', message: 'サーバーとの接続が切れました。' }));
-  ws.addEventListener('message', (event) => {
-    const data = JSON.parse(event.data);
-    addMessageToBox(data);
-  });
-}
-
-// メッセージ送信フォームの処理
-messageForm.addEventListener('submit', (e) => {
-  e.preventDefault();
+// フォームが送信されたときのイベント
+messageForm.addEventListener('submit', (event) => {
+  event.preventDefault();
   const message = messageInput.value.trim();
-  if (message && ws) {
+  if (message) {
+    // サーバーにメッセージを送信
     ws.send(message);
+    // 自分の画面にも送信したメッセージを表示（サーバーからの返信を待たずに表示）
+    addChatMessage(message, true);
     messageInput.value = '';
   }
 });
 
-// チャットボックスにメッセージを追加する関数
-function addMessageToBox(data) {
-  const div = document.createElement('div');
-  if (data.type === 'chat') {
-    div.className = 'chat-message';
-    div.innerHTML = `<span class="username">${data.username}:</span> ${data.message}`;
-  } else if (data.type === 'info') {
-    div.className = 'info-message';
-    div.textContent = data.message;
+// チャットメッセージをボックスに追加する関数
+function addChatMessage(message, isSentByMe = false) {
+  const messageElement = document.createElement('div');
+  messageElement.textContent = message;
+  // 自分が送信したメッセージか、他人から受信したメッセージかでスタイルを分ける（今回は簡易的にサーバーからの返信を待たずに判定）
+  // 実際のアプリでは、サーバーから誰が送信したかの情報を含めてもらうのが一般的
+  if (isSentByMe) {
+    messageElement.style.backgroundColor = '#dcf8c6';
+    messageElement.style.marginLeft = 'auto';
+  } else {
+    messageElement.style.backgroundColor = '#e9e9eb';
+    messageElement.style.marginRight = 'auto';
   }
-  chatBox.appendChild(div);
+  chatBox.appendChild(messageElement);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// ページ読み込み時にログイン状態を確認
-(async () => {
-  const response = await fetch('/api/user');
-  const data = await response.json();
-  if (data.loggedIn) {
-    enterChat(data.username);
-  }
-})();
+// システムメッセージをボックスに追加する関数
+function addSystemMessage(message) {
+    const messageElement = document.createElement('div');
+    messageElement.textContent = message;
+    messageElement.style.textAlign = 'center';
+    messageElement.style.color = '#888';
+    messageElement.style.fontStyle = 'italic';
+    chatBox.appendChild(messageElement);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}

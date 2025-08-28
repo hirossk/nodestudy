@@ -2,42 +2,28 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>セッション共有チャット</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>シンプルWebSocketチャット</title>
   <style>
-    body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; }
-    #login-container, #chat-container { padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
-    #chat-container { display: none; } /* 初期状態では非表示 */
-    #chat-box { height: 400px; overflow-y: scroll; padding: 10px; margin-bottom: 10px; background: #f9f9f9; }
-    .chat-message { margin-bottom: 8px; }
-    .chat-message .username { font-weight: bold; }
-    .info-message { color: #888; font-style: italic; text-align: center; }
-    form { display: flex; }
-    input { flex-grow: 1; padding: 8px; }
-    button { padding: 8px 15px; }
+    body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; background-color: #f4f4f9; }
+    h1 { text-align: center; color: #333; }
+    #chat-box { height: 400px; border: 1px solid #ccc; overflow-y: scroll; padding: 10px; margin-bottom: 10px; background-color: #fff; border-radius: 8px; }
+    #chat-box div { margin-bottom: 5px; padding: 8px 12px; border-radius: 15px; max-width: 70%; word-wrap: break-word; }
+    .message-sent { background-color: #dcf8c6; align-self: flex-end; }
+    .message-received { background-color: #e9e9eb; align-self: flex-start; }
+    #message-form { display: flex; }
+    #message-input { flex-grow: 1; padding: 10px; border: 1px solid #ccc; border-radius: 20px; }
+    button { padding: 10px 20px; margin-left: 10px; border: none; background-color: #007bff; color: white; border-radius: 20px; cursor: pointer; }
+    button:hover { background-color: #0056b3; }
   </style>
 </head>
 <body>
-  <h1>リアルタイムチャット (セッション共有)</h1>
-
-  <!-- ログインエリア -->
-  <div id="login-container">
-    <h2>ログイン</h2>
-    <form id="login-form">
-      <input type="text" id="username-input" placeholder="ユーザー名を入力" required>
-      <button type="submit">参加する</button>
-    </form>
-  </div>
-
-  <!-- チャットエリア -->
-  <div id="chat-container">
-    <h2 id="welcome-message"></h2>
-    <div id="chat-box"></div>
-    <form id="message-form">
-      <input type="text" id="message-input" placeholder="メッセージを入力..." autocomplete="off" required>
-      <button type="submit">送信</button>
-    </form>
-  </div>
-
+  <h1>リアルタイムチャット</h1>
+  <div id="chat-box"></div>
+  <form id="message-form">
+    <input type="text" id="message-input" placeholder="メッセージを入力..." autocomplete="off" required>
+    <button type="submit">送信</button>
+  </form>
   <script src="/js/app.js"></script>
 </body>
 </html>
